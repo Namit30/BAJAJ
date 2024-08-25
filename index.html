@@ -104,27 +104,40 @@
     if (!window.apiResult) return;
 
     const selectedOptions = Array.from(document.getElementById('response-options').selectedOptions).map(option => option.value);
-    const { is_success, user_id, email, roll_number, numbers, alphabets, highest_lowercase_alphabet } = window.apiResult;
-    const selectedData = {};
+    const { numbers, alphabets, highest_lowercase_alphabet, user_id, email, roll_number, is_success } = window.apiResult;
+    let selectedData = {};
 
     // If no options are selected, include all data
     if (selectedOptions.length === 0) {
-        selectedData.is_success = is_success;
-        selectedData.user_id = user_id;
-        selectedData.email = email;
-        selectedData.roll_number = roll_number;
-        selectedData.numbers = numbers || [];
-        selectedData.alphabets = alphabets || [];
-        selectedData.highest_lowercase_alphabet = highest_lowercase_alphabet || [];
+        selectedData = {
+            is_success,
+            user_id,
+            email,
+            roll_number,
+            numbers: numbers || [],
+            alphabets: alphabets || [],
+            highest_lowercase_alphabet: highest_lowercase_alphabet || ""
+        };
     } else {
-        // Include only the selected options
         if (selectedOptions.includes('numbers')) selectedData.numbers = numbers || [];
         if (selectedOptions.includes('alphabets')) selectedData.alphabets = alphabets || [];
-        if (selectedOptions.includes('highest_lowercase_alphabet')) selectedData.highest_lowercase_alphabet = highest_lowercase_alphabet || [];
+        if (selectedOptions.includes('highest_lowercase_alphabet')) selectedData.highest_lowercase_alphabet = highest_lowercase_alphabet || "";
     }
 
-    // Display the result
-    document.getElementById('result').innerHTML = `<pre>${JSON.stringify(selectedData, null, 2)}</pre>`;
+    // Generate HTML for JSON data
+    const outputHtml = Object.entries(selectedData).map(([key, value]) => {
+        if (Array.isArray(value)) {
+            const listItems = value.map(item => `<span class="value array-item">${item}</span>`).join('');
+            return `<div class="key">${key}:</div><div class="value">${listItems}</div>`;
+        } else if (typeof value === 'object') {
+            const objItems = Object.entries(value).map(([subKey, subValue]) => `<div class="key">${subKey}:</div><div class="value">${subValue}</div>`).join('');
+            return `<div class="key">${key}:</div><div class="value">${objItems}</div>`;
+        } else {
+            return `<div class="key">${key}:</div><div class="value">${value}</div>`;
+        }
+    }).join('');
+
+    document.getElementById('result').innerHTML = `<div class="json-output">${outputHtml}</div>`;
 }
 
 
