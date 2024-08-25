@@ -112,14 +112,46 @@ select {
 }
 
 /* Result Section Styling */
+/* Result Section Styling */
 #result {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: #ffffff; /* White background for result */
     padding: 15px;
     border-radius: 8px;
     font-family: 'Poppins', sans-serif;
     white-space: pre-wrap;
     overflow-x: auto;
 }
+
+/* JSON Output Styling */
+.json-output {
+    display: grid;
+    gap: 10px;
+}
+
+/* Key-Value Pair Styling */
+.json-output .key {
+    font-weight: bold;
+    color: #007bff; /* Blue for keys */
+}
+
+.json-output .value {
+    color: #333; /* Dark text color for values */
+    margin-left: 5px;
+}
+
+.json-output .value array-item,
+.json-output .value object-item {
+    margin-left: 20px;
+    padding: 5px;
+    border-left: 2px dashed #ccc;
+    display: block;
+}
+
+.json-output .value array-item {
+    border-left: 2px dashed #ddd;
+    margin-left: 20px;
+}
+
 
 /* Preformatted Text Styling */
 pre {
