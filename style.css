@@ -1,5 +1,3 @@
-/* style.css */
-
 /* Font Import */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap');
@@ -15,7 +13,7 @@ body {
     align-items: center;
     margin: 0;
     position: relative;
-    overflow: hidden;
+    overflow: auto; /* Enable scrolling if needed */
 }
 
 /* Shine Effect */
@@ -36,19 +34,48 @@ body::before {
 .container {
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 15px;
-    padding: 30px;
-    max-width: 500px;
+    padding: 20px; /* Padding inside the container */
+    max-width: 600px; /* Medium width for the container */
+    width: 100%; /* Ensure it takes full width of its parent */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Darker shadow for contrast */
     position: relative;
+    margin: 20px auto; /* Center the container */
+    opacity: 0; /* Start with invisible container */
+    animation: fadeIn 1s forwards; /* Fade-in animation */
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Heading Styles */
 h1 {
     font-family: 'Poppins', sans-serif;
     font-weight: 500;
-    font-size: 2.5rem;
+    font-size: 2rem; /* Responsive font size */
     margin-bottom: 20px;
     color: #00ff00; /* Green text color */
+    text-align: center; /* Center the text */
+    animation: textGlow 1.5s ease-in-out infinite; /* Glowing text animation */
+}
+
+@keyframes textGlow {
+    0% {
+        text-shadow: 0 0 5px #00ff00;
+    }
+    50% {
+        text-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00;
+    }
+    100% {
+        text-shadow: 0 0 5px #00ff00;
+    }
 }
 
 /* Label Styles */
@@ -60,15 +87,24 @@ label {
 /* Textarea Styles */
 textarea {
     background-color: rgba(255, 255, 255, 0.8);
-    border: none;
+    border: 2px solid transparent;
     border-radius: 8px;
     color: #333;
     font-size: 1rem;
     font-family: 'Roboto', sans-serif;
+    width: 100%; /* Make it take full width of the container */
+    resize: vertical; /* Allow vertical resizing if needed */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Animation on focus */
 }
 
 textarea::placeholder {
     color: #aaa;
+}
+
+textarea:focus {
+    border-color: #00ff00; /* Green border on focus */
+    box-shadow: 0 0 8px rgba(0, 255, 0, 0.5); /* Green shadow on focus */
+    outline: none; /* Remove default outline */
 }
 
 /* Button Styles */
@@ -79,13 +115,14 @@ button {
     font-size: 1.2rem;
     font-weight: 700;
     padding: 10px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Animation on hover */
     color: #000000; /* Black text color for button */
 }
 
 button:hover {
     background-color: #00cc00; /* Darker green on hover */
     cursor: pointer;
+    transform: scale(1.05); /* Slightly enlarge button on hover */
 }
 
 /* Select Styles */
@@ -97,6 +134,7 @@ select {
     font-size: 1rem;
     font-family: 'Roboto', sans-serif;
     margin-bottom: 20px;
+    width: 100%; /* Make it take full width of the container */
 }
 
 /* Dropdown Section Styling */
@@ -112,14 +150,46 @@ select {
 }
 
 /* Result Section Styling */
-/* Result Section Styling */
 #result {
     background-color: #ffffff; /* White background for result */
     padding: 15px;
     border-radius: 8px;
     font-family: 'Poppins', sans-serif;
     white-space: pre-wrap;
-    overflow-x: auto;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    max-height: 300px; /* Set a max height */
+    overflow-y: auto; /* Enable vertical scrolling if content overflows */
+    box-shadow: inset 0 -10px 10px -10px rgba(0,0,0,0.1); /* Subtle shadow indicating scroll */
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: #00ff00 #000000; /* Green scrollbar with black background */
+    position: relative;
+}
+
+#result::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(0, 255, 0, 0.2), transparent);
+    opacity: 0.5;
+    pointer-events: none;
+    border-radius: 8px;
+}
+
+/* Webkit Browsers */
+#result::-webkit-scrollbar {
+    width: 8px;
+}
+
+#result::-webkit-scrollbar-thumb {
+    background-color: #00ff00; /* Green scrollbar */
+    border-radius: 8px;
+}
+
+#result::-webkit-scrollbar-track {
+    background-color: #000000; /* Black background for the scrollbar track */
 }
 
 /* JSON Output Styling */
@@ -152,9 +222,23 @@ select {
     margin-left: 20px;
 }
 
-
 /* Preformatted Text Styling */
 pre {
     margin: 0;
     font-size: 1rem;
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 1.5rem; /* Smaller font size on small screens */
+    }
+
+    .container {
+        padding: 15px; /* Reduce padding on smaller screens */
+    }
+
+    textarea {
+        font-size: 0.9rem; /* Slightly smaller text for textarea */
+    }
 }
