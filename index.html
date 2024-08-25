@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>21BCE0763</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="../style.css">
+    <link rel="icon" href="https://dimaglushkov.xyz/public/stb-favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        .dropdown-section {
+            display: none; /* Initially hidden */
+            margin-top: 1rem;
+        }
+        .form-control {
+            margin-bottom: 1rem;
+        }
+        #result {
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mt-4">API Input</h1>
+        
+        <div class="form-group">
+            <label for="json-input">Enter JSON Data:</label>
+            <textarea class="form-control" id="json-input" rows="5" placeholder='Enter JSON data here...'></textarea>
+        </div>
+        
+        <button class="btn btn-primary btn-block" onclick="sendPostRequest()">Submit</button>
+        
+        <div class="form-group dropdown-section" id="dropdown-section">
+            <label for="response-options">Select Response Data:</label>
+            <select id="response-options" class="form-control" multiple>
+                <option value="alphabets">Alphabets</option>
+                <option value="numbers">Numbers</option>
+                <option value="highest_lowercase_alphabet">Highest Lowercase Alphabet</option>
+            </select>
+        </div>
+        
+        <div id="result">
+            <!-- The API response will be rendered here -->
+        </div>
+    </div>
+
+    <script>
+        document.title = "21BCE0763";
+
+        async function sendPostRequest() {
+            const jsonInput = document.getElementById('json-input').value;
+            try {
+                const parsedData = JSON.parse(jsonInput);
+
+                const response = await fetch('https://115b4d3a-1813-4c08-a169-bcf7b6e158b3-00-2mi74f7o94mty.janeway.replit.dev/bfhl', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(parsedData),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+
+                // Show the dropdown section
+                document.getElementById('dropdown-section').style.display = 'block';
+
+                // Store the result globally for use in renderResponse
+                window.apiResult = result;
+
+                // Call renderResponse to update the results based on the default selection
+                renderResponse();
+                
+            } catch (error) {
+                alert('Invalid JSON format or failed to fetch API');
+                console.error('Error:', error);
+            }
+        }
+
+        function renderResponse() {
+            if (!window.apiResult) return;
+
+            const selectedOptions = Array.from(document.getElementById('response-options').selectedOptions).map(option => option.value);
+            const { numbers, alphabets, highest_lowercase_alphabet } = window.apiResult;
+            const selectedData = {};
+
+            selectedOptions.forEach(option => {
+                if (option === 'numbers') selectedData.numbers = numbers || [];
+                if (option === 'alphabets') selectedData.alphabets = alphabets || [];
+                if (option === 'highest_lowercase_alphabet') selectedData.highest_lowercase_alphabet = highest_lowercase_alphabet || [];
+            });
+
+            document.getElementById('result').innerHTML = `<pre>${JSON.stringify(selectedData, null, 2)}</pre>`;
+        }
+
+        document.getElementById('response-options').addEventListener('change', renderResponse);
+    </script>
+</body>
+</html>
