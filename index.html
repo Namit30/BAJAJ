@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>21BCE0763</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
     <link rel="stylesheet" href="../style.css">
     <link rel="icon" href="https://dimaglushkov.xyz/public/stb-favicon.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
         .dropdown-section {
-            display: none; /* Initially hidden */
             margin-top: 1rem;
         }
         .form-control {
@@ -35,7 +35,7 @@
         
         <div class="form-group dropdown-section" id="dropdown-section">
             <label for="response-options">Select Response Data:</label>
-            <select id="response-options" class="form-control" multiple>
+            <select id="response-options" class="form-control select2" multiple>
                 <option value="alphabets">Alphabets</option>
                 <option value="numbers">Numbers</option>
                 <option value="highest_lowercase_alphabet">Highest Lowercase Alphabet</option>
@@ -47,8 +47,24 @@
         </div>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
         document.title = "21BCE0763";
+
+        $(document).ready(function() {
+            // Initialize Select2
+            $('.select2').select2({
+                placeholder: 'Select options',
+                width: '100%',
+                tags: true
+            });
+
+            // Add change event listener for Select2
+            $('.select2').on('change', function() {
+                renderResponse();
+            });
+        });
 
         async function sendPostRequest() {
             const jsonInput = document.getElementById('json-input').value;
@@ -85,22 +101,34 @@
         }
 
         function renderResponse() {
-            if (!window.apiResult) return;
+    if (!window.apiResult) return;
 
-            const selectedOptions = Array.from(document.getElementById('response-options').selectedOptions).map(option => option.value);
-            const { numbers, alphabets, highest_lowercase_alphabet } = window.apiResult;
-            const selectedData = {};
+    const selectedOptions = Array.from(document.getElementById('response-options').selectedOptions).map(option => option.value);
+    const { is_success, user_id, email, roll_number, numbers, alphabets, highest_lowercase_alphabet } = window.apiResult;
+    const selectedData = {};
 
-            selectedOptions.forEach(option => {
-                if (option === 'numbers') selectedData.numbers = numbers || [];
-                if (option === 'alphabets') selectedData.alphabets = alphabets || [];
-                if (option === 'highest_lowercase_alphabet') selectedData.highest_lowercase_alphabet = highest_lowercase_alphabet || [];
-            });
+    // If no options are selected, include all data
+    if (selectedOptions.length === 0) {
+        selectedData.is_success = is_success;
+        selectedData.user_id = user_id;
+        selectedData.email = email;
+        selectedData.roll_number = roll_number;
+        selectedData.numbers = numbers || [];
+        selectedData.alphabets = alphabets || [];
+        selectedData.highest_lowercase_alphabet = highest_lowercase_alphabet || [];
+    } else {
+        // Include only the selected options
+        if (selectedOptions.includes('numbers')) selectedData.numbers = numbers || [];
+        if (selectedOptions.includes('alphabets')) selectedData.alphabets = alphabets || [];
+        if (selectedOptions.includes('highest_lowercase_alphabet')) selectedData.highest_lowercase_alphabet = highest_lowercase_alphabet || [];
+    }
 
-            document.getElementById('result').innerHTML = `<pre>${JSON.stringify(selectedData, null, 2)}</pre>`;
-        }
+    // Display the result
+    document.getElementById('result').innerHTML = `<pre>${JSON.stringify(selectedData, null, 2)}</pre>`;
+}
 
-        document.getElementById('response-options').addEventListener('change', renderResponse);
+
+
     </script>
 </body>
 </html>
