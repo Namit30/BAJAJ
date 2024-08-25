@@ -5,15 +5,20 @@
 /* General Styles */
 body {
     font-family: 'Roboto', sans-serif;
-    background: linear-gradient(135deg, #000000, #434343); /* Black gradient background */
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.8), rgba(67, 67, 67, 0.8)), 
+                linear-gradient(135deg, #000000, #434343), /* Black gradient with radial overlay */
+                linear-gradient(45deg, rgba(0, 255, 0, 0.1) 25%, transparent 25%, transparent 75%, rgba(0, 255, 0, 0.1) 75%, rgba(0, 255, 0, 0.1) 100%); /* Tilt green lines */
+    background-blend-mode: overlay; /* Blend gradients for better effect */
     color: #00ff00; /* Green text color */
     min-height: 100vh;
     display: flex;
+    flex-direction: column; /* Ensure children align in column */
     justify-content: center;
     align-items: center;
     margin: 0;
     position: relative;
     overflow: auto; /* Enable scrolling if needed */
+    box-sizing: border-box; /* Ensure padding and borders are included in the element's total width and height */
 }
 
 /* Shine Effect */
@@ -24,8 +29,8 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent);
-    opacity: 0.2;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent);
+    opacity: 0.3;
     pointer-events: none;
     mix-blend-mode: overlay;
 }
@@ -35,15 +40,17 @@ body::before {
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 15px;
     padding: 20px; /* Padding inside the container */
-    max-width: 600px; /* Medium width for the container */
+    max-width: 650px; /* Medium width for the container */
     width: 100%; /* Ensure it takes full width of its parent */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Darker shadow for contrast */
-    position: relative;
+    min-height: 500px; /* Minimum height */
+    height: auto; /* Allow height to adjust based on content */
     margin: 20px auto; /* Center the container */
     opacity: 0; /* Start with invisible container */
     animation: fadeIn 1s forwards; /* Fade-in animation */
 }
 
+/* Fade-In Animation */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -66,6 +73,7 @@ h1 {
     animation: textGlow 1.5s ease-in-out infinite; /* Glowing text animation */
 }
 
+/* Glowing Text Animation */
 @keyframes textGlow {
     0% {
         text-shadow: 0 0 5px #00ff00;
@@ -229,7 +237,7 @@ pre {
 }
 
 /* Responsive Styles */
-@media (max-width: 600px) {
+@media (max-width: 650px) {
     h1 {
         font-size: 1.5rem; /* Smaller font size on small screens */
     }
